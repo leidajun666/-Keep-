@@ -76,6 +76,7 @@ const errorMsg = document.getElementById("errorMsg");
 const phoneCard = document.getElementById("phoneCard");
 const layoutStack = document.getElementById("layoutStack");
 const layoutModeToggle = document.getElementById("layoutModeToggle");
+const screenshotBtn = document.getElementById("screenshotBtn");
 const chartInner = document.getElementById("chartInner");
 
 let debounceTimer = null;
@@ -911,6 +912,71 @@ function bindChartModeUi() {
   syncChartEditorVisibility();
 }
 
+function screenshotFileName() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `运动记录_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.png`;
+}
+
+function initScreenshotDownload() {
+  if (!screenshotBtn) return;
+  screenshotBtn.addEventListener("click", async () => {
+    if (typeof html2canvas !== "function") {
+      errorMsg.textContent = "截图库未加载，请检查网络后刷新页面。";
+      return;
+    }
+    const wasEdit = phoneCard.classList.contains("layout-edit-mode");
+    screenshotBtn.disabled = true;
+    const prevLabel = screenshotBtn.textContent;
+    screenshotBtn.textContent = "生成中…";
+    phoneCard.classList.add("screenshot-prep");
+    if (wasEdit) phoneCard.classList.remove("layout-edit-mode");
+    try {
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const canvas = await html2canvas(phoneCard, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        logging: false,
+      });
+      await new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("无法生成图片"));
+              return;
+            }
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = screenshotFileName();
+            a.click();
+            URL.revokeObjectURL(a.href);
+            resolve();
+          },
+          "image/png",
+          1
+        );
+      });
+      errorMsg.textContent = "";
+      saveStatus.textContent = "截图已下载";
+      clearTimeout(statusHideTimer);
+      statusHideTimer = setTimeout(() => {
+        saveStatus.textContent = "";
+      }, 2000);
+    } catch (e) {
+      errorMsg.textContent = e.message || "截图失败";
+    } finally {
+      phoneCard.classList.remove("screenshot-prep");
+      if (wasEdit) {
+        phoneCard.classList.add("layout-edit-mode");
+        setDragEnabled(true);
+      }
+      screenshotBtn.disabled = false;
+      screenshotBtn.textContent = prevLabel;
+    }
+  });
+}
+
 function wireYearNav() {
   document.getElementById("layoutStack").addEventListener("click", (e) => {
     const btn = e.target.closest(".year-nav");
@@ -935,6 +1001,7 @@ buildDynamicForm();
 buildMonthInputs();
 applyLayout(loadLayout());
 initLayoutMode();
+initScreenshotDownload();
 wireYearNav();
 
 let currentData = loadData();

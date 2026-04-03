@@ -10,6 +10,9 @@
     <main class="page">
       <section class="phone-card" id="phoneCard">
         <div class="phone-toolbar">
+          <button type="button" id="screenshotBtn" class="layout-toggle layout-toggle-primary" title="导出左侧预览为 PNG">
+            下载截图
+          </button>
           <button type="button" id="layoutModeToggle" class="layout-toggle" aria-pressed="false">
             布局编辑
           </button>
@@ -247,6 +250,7 @@
       </aside>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

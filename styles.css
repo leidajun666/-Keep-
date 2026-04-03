@@ -58,7 +58,24 @@ body {
 .phone-toolbar {
   display: flex;
   justify-content: flex-end;
+  gap: 0.35rem;
+  flex-wrap: wrap;
   margin-bottom: 0.25rem;
+}
+
+.phone-card.screenshot-prep .phone-toolbar {
+  display: none;
+}
+
+.phone-card.screenshot-prep .layout-block-chrome {
+  display: none !important;
+}
+
+.phone-card.screenshot-prep.layout-edit-mode .layout-block {
+  outline: none;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .layout-toggle {
@@ -76,6 +93,13 @@ body {
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
+}
+
+.layout-toggle-primary {
+  background: #fff;
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .layout-stack {
