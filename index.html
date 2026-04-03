@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>运动记录面板</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="phone-card" id="phoneCard">
+        <div class="phone-toolbar">
+          <button type="button" id="layoutModeToggle" class="layout-toggle" aria-pressed="false">
+            布局编辑
+          </button>
+        </div>
+
+        <div class="layout-stack" id="layoutStack">
+          <div class="layout-block" data-layout-id="header">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">顶部栏</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="0" data-layout-key="header" />
+                <span class="layout-margin-val">0</span>
+              </label>
+            </div>
+            <header class="top-bar" id="headerRoot"></header>
+          </div>
+
+          <div class="layout-block" data-layout-id="summary">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">统计卡片</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="12" data-layout-key="summary" />
+                <span class="layout-margin-val">12</span>
+              </label>
+            </div>
+            <div class="summary-cards summary-cards-scroll" id="summaryCardsRoot"></div>
+          </div>
+
+          <div class="layout-block" data-layout-id="tabs">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">周期切换</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="12" data-layout-key="tabs" />
+                <span class="layout-margin-val">12</span>
+              </label>
+            </div>
+            <nav class="tabs" id="tabsRoot" aria-label="周期"></nav>
+          </div>
+
+          <div class="layout-block" data-layout-id="year">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">年度数据</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="16" data-layout-key="year" />
+                <span class="layout-margin-val">16</span>
+              </label>
+            </div>
+            <section class="year-panel">
+              <div class="year-row">
+                <button type="button" class="icon-btn year-nav" aria-label="上一年">‹</button>
+                <h2 id="yearTitle">2026年</h2>
+                <button type="button" class="icon-btn year-nav" aria-label="下一年">›</button>
+              </div>
+              <p class="metric-label" id="primaryMetricLabel">里程(公里)</p>
+              <p class="metric-value" id="primaryMetricValue">0</p>
+              <div class="mini-metrics" id="miniMetricsRoot"></div>
+            </section>
+          </div>
+
+          <div class="layout-block" data-layout-id="bars">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">图表</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="12" data-layout-key="bars" />
+                <span class="layout-margin-val">12</span>
+              </label>
+              <label class="layout-bars-height-wrap">
+                高度
+                <input type="range" class="layout-bars-height-input" min="80" max="280" value="160" />
+                <span class="layout-bars-height-val">160</span>
+              </label>
+            </div>
+            <div class="chart-wrap" id="chartWrap">
+              <div class="chart-inner" id="chartInner" aria-label="数据图表"></div>
+            </div>
+          </div>
+
+          <div class="layout-block" data-layout-id="sessions">
+            <div class="layout-block-chrome">
+              <span class="layout-drag-handle" draggable="false" title="拖动排序">⠿</span>
+              <span class="layout-block-title">运动记录列表</span>
+              <label class="layout-margin-wrap">
+                上间距
+                <input type="range" class="layout-margin-input" min="0" max="48" value="12" data-layout-key="sessions" />
+                <span class="layout-margin-val">12</span>
+              </label>
+            </div>
+            <ul class="session-list" id="sessionsRoot"></ul>
+          </div>
+        </div>
+      </section>
+
+      <aside class="editor-card">
+        <h2>界面与数据</h2>
+        <p class="editor-intro">所有文案与数值均可改，修改后自动保存。</p>
+
+        <form id="dataForm" class="data-form" autocomplete="off">
+          <fieldset class="form-block">
+            <legend>顶部栏</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_header" />
+            </div>
+            <div class="form-row">
+              <label>标题</label>
+              <input type="text" name="headerTitle" />
+            </div>
+            <div class="form-row">
+              <label>显示「主页」图标</label>
+              <input type="checkbox" name="headerShowHome" />
+            </div>
+            <div class="form-row">
+              <label>返回</label>
+              <input type="text" name="iconBack" />
+            </div>
+            <div class="form-row">
+              <label>主页</label>
+              <input type="text" name="iconHome" />
+            </div>
+            <div class="form-row">
+              <label>分享</label>
+              <input type="text" name="iconShare" />
+            </div>
+            <div class="form-row">
+              <label>更多</label>
+              <input type="text" name="iconMore" />
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>统计卡片（3 张）</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_summary" />
+            </div>
+            <p class="form-hint">选中态决定哪张卡片为深色描边。</p>
+            <div class="form-sub" id="summaryCardsForm"></div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>周期标签（5 个）</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_tabs" />
+            </div>
+            <div class="form-sub" id="periodTabsForm"></div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>年份行</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_year" />
+            </div>
+            <div class="form-row">
+              <label>年份数字</label>
+              <input type="number" name="yearValue" min="2000" max="2100" step="1" />
+            </div>
+            <div class="form-row">
+              <label>后缀文案</label>
+              <input type="text" name="yearSuffix" placeholder="如：年" />
+            </div>
+            <div class="form-row">
+              <label>整行覆盖（可选）</label>
+              <input type="text" name="yearTitleOverride" placeholder="留空则用「年份+后缀」" />
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>主指标与四宫格</legend>
+            <div class="form-row">
+              <label>主指标标题</label>
+              <input type="text" name="primaryLabel" />
+            </div>
+            <div class="form-row">
+              <label>主指标数值</label>
+              <input type="text" name="primaryValue" />
+            </div>
+            <div class="form-sub" id="secondaryMetricsForm"></div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>图表</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_bars" />
+            </div>
+            <div class="form-row">
+              <label>模式</label>
+              <select name="chartMode">
+                <option value="years">按柱（年/自定义）</option>
+                <option value="months">12 个月</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>提示框后缀</label>
+              <input type="text" name="chartTooltipSuffix" placeholder="如： 公里" />
+            </div>
+            <p class="form-hint">「按柱」模式下编辑各柱标签、数值；勾选「高亮」显示绿色与上方提示。</p>
+            <div class="form-sub" id="chartBarsForm"></div>
+            <p class="form-hint chart-months-hint">「12 个月」模式使用下方月度数据。</p>
+            <div class="months-grid" id="monthsGrid"></div>
+          </fieldset>
+
+          <fieldset class="form-block">
+            <legend>运动记录列表</legend>
+            <div class="form-row">
+              <label>显示该视图</label>
+              <input type="checkbox" name="view_sessions" />
+            </div>
+            <div class="form-row">
+              <label>显示列表</label>
+              <input type="checkbox" name="showSessionList" />
+            </div>
+            <div class="form-sub" id="sessionsForm"></div>
+          </fieldset>
+        </form>
+
+        <div class="editor-actions">
+          <button type="button" id="resetLayoutBtn" class="ghost">布局恢复默认</button>
+          <button type="button" id="resetBtn" class="ghost">数据恢复默认</button>
+        </div>
+        <p class="save-status" id="saveStatus" aria-live="polite"></p>
+        <p class="error" id="errorMsg"></p>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
